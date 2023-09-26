@@ -16,7 +16,7 @@ namespace webapi.Data.Model
 
         [MaxLength(1000)]
         public string? AdditionalInfo { get; set; }
-        // Navigation property for EventParticipants
+
         public ICollection<EventParticipant> EventParticipants { get; set; }
     }
 }

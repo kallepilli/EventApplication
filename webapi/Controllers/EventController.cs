@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using webapi.Data;
 using webapi.Data.Model;
+using webapi.Services.Interfaces;
 
 namespace webapi.Controllers;
 
@@ -9,11 +10,11 @@ namespace webapi.Controllers;
 public class EventController : ControllerBase
 {
 
-    private readonly ApplicationDbContext _context;
+    private readonly IBaseService<Event> _service;
 
-    public EventController(ApplicationDbContext context)
+    public EventController(IBaseService<Event> service)
     {
-       _context = context;
+       _service = service;
     }
 
     [HttpGet(Name = "GetEvents")]

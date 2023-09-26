@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using webapi.Data;
 using webapi.Data.Model;
+using webapi.Services.Interfaces;
 
 namespace webapi.Controllers;
 
@@ -9,39 +10,16 @@ namespace webapi.Controllers;
 public class EventParticipantController : ControllerBase
 {
 
-    private readonly ApplicationDbContext _context;
+    private readonly IBaseService<EventParticipant> _service;
 
-    public EventParticipantController(ApplicationDbContext context)
+    public EventParticipantController(IBaseService<EventParticipant> service)
     {
-       _context = context;
+        _service = service;
     }
 
     [HttpPost(Name = "Add EventParticipant")]
     public IActionResult AddParticipant()
     {
-        var newEvent = new Event()
-        {
-            Name= "nammmeeme",
-            EventTime = DateTime.Now.ToUniversalTime(),
-            Location = "Tallinn",
-        };
-
-        _context.Events.Add(newEvent);
-        _context.SaveChanges();
-
-        var eventId = _context.Events.FirstOrDefault().Id;
-        var newParticipant = new EventParticipant()
-        {
-            CompanyName = "TESTNAME",
-            AdditionalInfo = "SKDFLKJSFLKSJDF",
-            EventId = eventId,
-            ParticipantCount = 3,
-            IdCode = "fsdf",
-            PaymentMethod = PaymentMethod.Cash
-        };
-
-        _context.EventParticipants.Add(newParticipant);
-        _context.SaveChanges();
         return Ok();
     }
 }
