@@ -5,7 +5,7 @@ using webapi.Repositories.Interfaces;
 
 namespace webapi.Repositories
 {
-    public class EventParticipantRepository : IBaseRepository<Event>
+    public class EventParticipantRepository : IEventParticipantRepository<EventParticipant>
     {
 
         private readonly ApplicationDbContext db;
@@ -17,25 +17,66 @@ namespace webapi.Repositories
             dbSet = context.EventParticipants;
         }
 
+        public async Task<EventParticipant> Get(string id) => (await dbSet.FirstOrDefaultAsync(e => e.Id == id))!;
 
-        public Task<bool> Delete(string id)
+        public async Task<List<EventParticipant>> GetList() => (await dbSet.ToListAsync());
+
+        public async Task<EventParticipant?> Save(EventParticipant data)
         {
-            throw new NotImplementedException();
+            try
+            {
+                dbSet.Add(data);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+                throw;
+            }
+            return await Get(data.Id);
         }
 
-        public Task<Event> Get(string id)
+        public async Task<EventParticipant?> Update(string id, EventParticipant data)
         {
-            throw new NotImplementedException();
+            var dbEventParticipant = await Get(id);
+            if (dbEventParticipant is not null)
+            {
+                dbEventParticipant.IdCode = data.IdCode;
+                dbEventParticipant.FirstName = data.FirstName;
+                dbEventParticipant.LastName = data.LastName;
+                dbEventParticipant.CompanyName = data.CompanyName;
+                dbEventParticipant.ParticipantCount = data.ParticipantCount;
+                dbEventParticipant.AdditionalInfo = data.AdditionalInfo;
+                dbEventParticipant.PaymentMethod = data.PaymentMethod;
+
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+                return data;
+            }
+            return null;
+        }
+        public async Task<bool> Delete(string id)
+        {
+            var dbEventParticipant = await Get(id);
+            if (dbEventParticipant is not null)
+            {
+                dbSet.Remove(dbEventParticipant);
+                await db.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
-        public Task<Event> Save(Event data)
+        public List<EventParticipant> GetParticipantListByEventId(string id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Event> Update(string id, Event data)
-        {
-            throw new NotImplementedException();
+            return dbSet.Where(x => x.EventId == id).ToList();
         }
     }
 }

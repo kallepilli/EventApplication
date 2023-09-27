@@ -17,25 +17,39 @@ namespace webapi.Repositories
             dbSet = context.Events;
         }
 
+        public async Task<Event> Get(string id) => (await dbSet.FirstOrDefaultAsync(e => e.Id == id))!;
 
-        public Task<bool> Delete(string id)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<List<Event>> GetList() => (await dbSet.ToListAsync());
 
-        public Task<Event> Get(string id)
+        public async Task<Event?> Save(Event data)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Event> Save(Event data)
-        {
-            throw new NotImplementedException();
+            try
+            {
+                dbSet.Add(data);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+                throw;
+            }
+            return await Get(data.Id);
         }
 
         public Task<Event> Update(string id, Event data)
         {
             throw new NotImplementedException();
+        }
+        public async Task<bool> Delete(string id)
+        {
+            var dbEvent = await Get(id);
+            if (dbEvent is not null)
+            {
+                dbSet.Remove(dbEvent);
+                await db.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }
