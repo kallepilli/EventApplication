@@ -10,16 +10,20 @@ namespace webapi.Controllers;
 public class EventController : ControllerBase
 {
 
-    private readonly IBaseService<Event, EventDTO> service;
+    private readonly IEventService<Event, EventDTO> service;
 
-    public EventController(IBaseService<Event, EventDTO> service)
+    public EventController(IEventService<Event, EventDTO> service)
     {
         this.service = service;
     }
 
     [HttpGet]
-    [Route("eventList")]
-    public async Task<IActionResult> GetEvents() => Ok(await service.GetList());
+    [Route("{id}")]
+    public async Task<IActionResult> GetEvents(string id) => Ok(await service.GetEventWithParticipants(id));
+
+    [HttpGet]
+    [Route("")]
+    public async Task<IActionResult> GetEventList() => Ok(await service.GetEventWithParticipantsList());
 
     [HttpPost]
     public async Task<IActionResult> SaveEvent([FromBody] EventDTO dto)

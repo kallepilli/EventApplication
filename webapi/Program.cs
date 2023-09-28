@@ -17,7 +17,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddTransient<IBaseRepository<Event>, EventRepository>();
-builder.Services.AddTransient<IBaseService<Event, EventDTO>, EventService>();
+builder.Services.AddTransient<IEventService<Event, EventDTO>, EventService>();
 
 builder.Services.AddTransient<IEventParticipantRepository<EventParticipant>, EventParticipantRepository>();
 builder.Services.AddTransient<IEventParticipantService<EventParticipant, EventParticipantDTO>, EventParticipantService>();

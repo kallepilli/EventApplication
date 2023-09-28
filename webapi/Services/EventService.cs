@@ -5,13 +5,15 @@ using webapi.Services.Interfaces;
 
 namespace webapi.Services
 {
-    public class EventService : IBaseService<Event, EventDTO>
+    public class EventService : IEventService<Event, EventDTO>
     {
         private readonly IBaseRepository<Event> repo;
+        private readonly IEventParticipantRepository<EventParticipant> eventParticipantRepo;
 
-        public EventService(IBaseRepository<Event> repository)
+        public EventService(IBaseRepository<Event> repository, IEventParticipantRepository<EventParticipant> eventParticipantRepository)
         {
-            repo = repository;           
+            repo = repository;      
+            eventParticipantRepo = eventParticipantRepository;
         }
 
         public async Task<Event> Get(string id) => await repo.Get(id);
@@ -29,6 +31,47 @@ namespace webapi.Services
                 Location = dto.Location,
                 AdditionalInfo = dto.AdditionalInfo
             };
+        }
+
+        public async Task<EventWithParticipants> GetEventWithParticipants(string eventId)
+        {
+            var count = GetParticipantCount(eventId);
+            var eventEntity = await repo.Get(eventId);
+
+            return new EventWithParticipants
+            {
+                EventId = eventId,
+                Name = eventEntity.Name,
+                EventTime = eventEntity.EventTime,
+                Location = eventEntity.Location,
+                ParticipantCount = count
+            };
+        }
+
+        public async Task<List<EventWithParticipants>> GetEventWithParticipantsList()
+        {
+            var events = await repo.GetList();
+            var eventWithParticipantsList = new List<EventWithParticipants>();
+            foreach (var item in events)
+            {
+                eventWithParticipantsList.Add(await GetEventWithParticipants(item.Id));
+            }
+            return eventWithParticipantsList;
+        }
+
+        private int GetParticipantCount(string id)
+        {
+            var eventParticipants = eventParticipantRepo.GetParticipantListByEventId(id);
+            int count = 0;
+
+            foreach (var item in eventParticipants)
+            {
+                if (item.IsCompany)
+                    count += item.ParticipantCount ?? 0;
+                else
+                    count++;
+            }
+            return count;
         }
     }
 }
