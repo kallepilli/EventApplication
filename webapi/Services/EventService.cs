@@ -1,4 +1,5 @@
-﻿using webapi.Data.Model;
+﻿using System.Reflection.Metadata.Ecma335;
+using webapi.Data.Model;
 using webapi.Data.Model.DTOs;
 using webapi.Repositories.Interfaces;
 using webapi.Services.Interfaces;
@@ -27,7 +28,7 @@ namespace webapi.Services
             return new Event
             {
                 Name = dto.Name,
-                EventTime = dto.EventTime,
+                EventTime = dto.EventTime.ToUniversalTime(),
                 Location = dto.Location,
                 AdditionalInfo = dto.AdditionalInfo
             };
@@ -48,15 +49,21 @@ namespace webapi.Services
             };
         }
 
-        public async Task<List<EventWithParticipants>> GetEventWithParticipantsList()
+        public async Task<List<EventWithParticipants>[]> GetEventWithParticipantsList()
         {
-            var events = await repo.GetList();
-            var eventWithParticipantsList = new List<EventWithParticipants>();
-            foreach (var item in events)
+            var events = (await repo.GetList()).OrderBy(x => x.EventTime);
+            var returnArray = new List<EventWithParticipants>[2];
+            returnArray[0] = new List<EventWithParticipants>();
+            returnArray[1] = new List<EventWithParticipants>();
+            foreach (var item in events) 
             {
-                eventWithParticipantsList.Add(await GetEventWithParticipants(item.Id));
+                if (item.EventTime > DateTime.Today) // index 0 - future events, index 1 - past event
+                    returnArray[0].Add(await GetEventWithParticipants(item.Id));
+                else
+                    returnArray[1].Add(await GetEventWithParticipants(item.Id));
             }
-            return eventWithParticipantsList;
+
+            return returnArray;
         }
 
         private int GetParticipantCount(string id)

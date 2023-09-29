@@ -1,47 +1,47 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <div class="container">
+                <router-link to="/" class="navbar-brand">
+                    <img src="../src/assets/logo.png" alt="Event App" class="logo-img" style="">
+                </router-link>
+                <div class="container">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <router-link to="/" class="nav-link">Avaleht</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link to="/addEvent" class="nav-link">Lisa &uuml;ritus</router-link>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    <div class="container fixed-top" style="margin-top: 80px;">
+        <router-view />
+    </div>
 </template>
 
+<script>
+    export default {
+        // Your script setup goes here
+    };
+</script>
+
 <style scoped>
-header {
-  line-height: 1.5;
-}
+    /* Additional styles for the navbar */
+    .navbar {
+        border-bottom: 1px solid #e0e0e0;
+    }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+    .navbar-brand {
+        font-weight: bold;
+    }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+    .logo-img {
+        max-width: 120px; /* Adjust the size as needed */
+    }
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
+    /* Add any additional styling here if needed */
 </style>

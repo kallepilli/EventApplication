@@ -1,0 +1,74 @@
+<template>
+    <div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Tuleviku &uuml;ritused</h3>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nimi</th>
+                            <th>Kuup&auml;ev</th>
+                            <th>Asukoht</th>
+                            <th>Osalejate arv</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="event in events[0]" :key="event.id">
+                            <td>{{ event.name }}</td>
+                            <td>{{ event.eventTime }}</td>
+                            <td>{{ event.location }}</td>
+                            <td>{{ event.participantCount }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h3>Toimunud &uuml;ritused</h3>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nimi</th>
+                            <th>Kuup&auml;ev</th>
+                            <th>Asukoht</th>
+                            <th>Osalejate arv</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="event in events[1]" :key="event.id">
+                            <td>{{ event.name }}</td>
+                            <td>{{ event.eventTime }}</td>
+                            <td>{{ event.location }}</td>
+                            <td>{{ event.participantCount }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<script setup lang="ts">
+    import { ref, onMounted } from 'vue';
+
+    const events = ref([]);
+
+    const fetchEvents = async () => {
+        try {
+            const response = await fetch('https://localhost:7165/event');
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            events.value = data;
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
+    };
+
+    onMounted(() => {
+        fetchEvents();
+    });
+</script>

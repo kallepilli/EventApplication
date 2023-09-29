@@ -8,6 +8,6 @@ namespace webapi.Services.Interfaces
 
     {
         Task<EventWithParticipants> GetEventWithParticipants(string eventId);
-        Task<List<EventWithParticipants>> GetEventWithParticipantsList();
+        Task<List<EventWithParticipants>[]> GetEventWithParticipantsList();
     }
 }
