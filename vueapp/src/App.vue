@@ -19,29 +19,12 @@
         </nav>
     </div>
     <div class="container fixed-top" style="margin-top: 80px;">
-        <router-view />
+        <div class="scrollable-content">
+            <router-view />
+        </div>
     </div>
 </template>
 
-<script>
-    export default {
-        // Your script setup goes here
-    };
+<script setup lang="ts">
+
 </script>
-
-<style scoped>
-    /* Additional styles for the navbar */
-    .navbar {
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-    .navbar-brand {
-        font-weight: bold;
-    }
-
-    .logo-img {
-        max-width: 120px; /* Adjust the size as needed */
-    }
-
-    /* Add any additional styling here if needed */
-</style>

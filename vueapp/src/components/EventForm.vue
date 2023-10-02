@@ -24,15 +24,16 @@
 </template>
 
 <script setup lang="ts">
-import { Ref, ref } from 'vue';
-import type { EventDTO } from '../model/EventDTO';
+    import { Ref, ref } from 'vue';
+    import type { EventDTO } from '../model/EventDTO';
+    import { useRouter } from 'vue-router';
 
-
+    const router = useRouter();
     const event: Ref<EventDTO> = ref({
-    Name: '',
-    EventTime: undefined,
-    Location: '',
-    AdditionalInfo: ''
+        Name: '',
+        EventTime: undefined,
+        Location: '',
+        AdditionalInfo: ''
     });
 
     const submit = async () => {
@@ -61,19 +62,13 @@ import type { EventDTO } from '../model/EventDTO';
         } catch (error) {
             console.error('Error creating event:', error);
         }
-
+        router.push('/');
     };
 
     const isFilled = () => {
-        if (event.value.Name == '' || event.value.Location == '' || event.value.EventTime == undefined ) {
+        if (event.value.Name == '' || event.value.Location == '' || event.value.EventTime == undefined) {
             return false;
         }
         return true;
     };
-
-
-
-console.log(event)
-
-
 </script>

@@ -25,10 +25,10 @@ namespace webapi.Services
             {
                 EventId = dto.EventId,
                 IdCode = dto.IdCode,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                CompanyName = dto.CompanyName,
-                ParticipantCount = dto.ParticipantCount,
+                FirstName = dto.IsCompany == true ? null : dto.FirstName,
+                LastName = dto.IsCompany == true ? null : dto.LastName,
+                CompanyName = dto.IsCompany == true ? dto.CompanyName : null,
+                ParticipantCount = dto.IsCompany == true ? dto.ParticipantCount : 1,
                 AdditionalInfo = dto.AdditionalInfo,
                 PaymentMethod = dto.PaymentMethod,
                 IsCompany = dto.IsCompany

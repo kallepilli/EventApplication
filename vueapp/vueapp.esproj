@@ -12,6 +12,5 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="router\" />
-    <Folder Include="src\model\" />
   </ItemGroup>
 </Project>

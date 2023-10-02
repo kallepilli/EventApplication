@@ -50,4 +50,14 @@ public class EventParticipantController : ControllerBase
             return BadRequest();
         return Ok(result);
     }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var result = await service.Delete(id);
+        if (result)
+            return Ok();
+        return NotFound();
+    }
 }
