@@ -7,7 +7,7 @@ namespace webapi.Services.Interfaces
     where R : class
 
     {
-        Task<EventWithParticipants> GetEventWithParticipants(string eventId);
-        Task<List<EventWithParticipants>[]> GetEventWithParticipantsList();
+        Task<EventWithParticipantCount> GetEventWithParticipantCount(string eventId);
+        Task<List<EventWithParticipantCount>[]> GetEventWithParticipantsList();
     }
 }

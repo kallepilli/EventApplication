@@ -41,10 +41,6 @@ namespace webapi.Repositories
             var dbEventParticipant = await Get(id);
             if (dbEventParticipant is not null)
             {
-                dbEventParticipant.IdCode = data.IdCode;
-                dbEventParticipant.FirstName = data.FirstName;
-                dbEventParticipant.LastName = data.LastName;
-                dbEventParticipant.CompanyName = data.CompanyName;
                 dbEventParticipant.ParticipantCount = data.ParticipantCount;
                 dbEventParticipant.AdditionalInfo = data.AdditionalInfo;
                 dbEventParticipant.PaymentMethod = data.PaymentMethod;
@@ -74,7 +70,7 @@ namespace webapi.Repositories
             return false;
         }
 
-        public List<EventParticipant> GetParticipantListByEventId(string id)
+        public List<EventParticipant> GetEventParticipantListByEventId(string id)
         {
             return dbSet.Where(x => x.EventId == id).ToList();
         }

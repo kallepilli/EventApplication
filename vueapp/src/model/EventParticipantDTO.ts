@@ -1,12 +1,8 @@
 export interface EventParticipantDTO {
     EventId: String
-    IdCode: String
-    FirstName: String
-    LastName: String
-    CompanyName: String
+    ParticipantId: String
     ParticipantCount: Number
     AdditionalInfo: String
     PaymentMethod: Number
-    IsCompany: Boolean
 
 }

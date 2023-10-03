@@ -1,6 +1,6 @@
 ﻿namespace webapi.Data.Model
 {
-    public class EventWithParticipants
+    public class EventWithParticipantCount
     {
         public string EventId { get; set; }
         public string Name { get; set; }

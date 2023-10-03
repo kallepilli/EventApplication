@@ -1,6 +1,7 @@
 ﻿using System.Reflection.Metadata.Ecma335;
 using webapi.Data.Model;
 using webapi.Data.Model.DTOs;
+using webapi.Repositories;
 using webapi.Repositories.Interfaces;
 using webapi.Services.Interfaces;
 
@@ -10,11 +11,15 @@ namespace webapi.Services
     {
         private readonly IBaseRepository<Event> repo;
         private readonly IEventParticipantRepository<EventParticipant> eventParticipantRepo;
+        private readonly IBaseRepository<Participant> participantRepo;
 
-        public EventService(IBaseRepository<Event> repository, IEventParticipantRepository<EventParticipant> eventParticipantRepository)
+        public EventService(IBaseRepository<Event> repository, 
+            IEventParticipantRepository<EventParticipant> eventParticipantRepository, 
+            IParticipantRepository<Participant> participantRepository)
         {
             repo = repository;      
             eventParticipantRepo = eventParticipantRepository;
+            participantRepo = participantRepository;
         }
 
         public async Task<Event> Get(string id) => await repo.Get(id);
@@ -34,12 +39,12 @@ namespace webapi.Services
             };
         }
 
-        public async Task<EventWithParticipants> GetEventWithParticipants(string eventId)
+        public async Task<EventWithParticipantCount> GetEventWithParticipantCount(string eventId)
         {
             var count = GetParticipantCount(eventId);
             var eventEntity = await repo.Get(eventId);
 
-            return new EventWithParticipants
+            return new EventWithParticipantCount
             {
                 EventId = eventId,
                 Name = eventEntity.Name,
@@ -50,18 +55,18 @@ namespace webapi.Services
             };
         }
 
-        public async Task<List<EventWithParticipants>[]> GetEventWithParticipantsList()
+        public async Task<List<EventWithParticipantCount>[]> GetEventWithParticipantsList()
         {
             var events = (await repo.GetList()).OrderBy(x => x.EventTime);
-            var returnArray = new List<EventWithParticipants>[2];
-            returnArray[0] = new List<EventWithParticipants>();
-            returnArray[1] = new List<EventWithParticipants>();
+            var returnArray = new List<EventWithParticipantCount>[2];
+            returnArray[0] = new List<EventWithParticipantCount>();
+            returnArray[1] = new List<EventWithParticipantCount>();
             foreach (var item in events) 
             {
                 if (item.EventTime >= DateTime.Today.ToUniversalTime()) // index 0 - future events, index 1 - past event
-                    returnArray[0].Add(await GetEventWithParticipants(item.Id));
+                    returnArray[0].Add(await GetEventWithParticipantCount(item.Id));
                 else
-                    returnArray[1].Add(await GetEventWithParticipants(item.Id));
+                    returnArray[1].Add(await GetEventWithParticipantCount(item.Id));
             }
 
             return returnArray;
@@ -69,12 +74,13 @@ namespace webapi.Services
 
         private int GetParticipantCount(string id)
         {
-            var eventParticipants = eventParticipantRepo.GetParticipantListByEventId(id);
+            var eventParticipants = eventParticipantRepo.GetEventParticipantListByEventId(id);
             int count = 0;
 
             foreach (var item in eventParticipants)
             {
-                if (item.IsCompany)
+                var participant = participantRepo.Get(item.ParticipantId);
+                if (participant.Result.IsCompany)
                     count += item.ParticipantCount ?? 0;
                 else
                     count++;

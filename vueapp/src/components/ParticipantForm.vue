@@ -39,18 +39,18 @@
             </div>
             <div class="mb-3" v-if="participant.IsCompany">
                 <label class="form-label" for="participantCount">Osalejate arv</label>
-                <input v-model="participant.ParticipantCount" type="number" min="1" class="form-control" id="participantCount" required />
+                <input v-model="eventParticipant.ParticipantCount" type="number" min="1" class="form-control" id="participantCount" required />
             </div>
             <div class="mb-3">
                 <label class="form-label" for="paymentMethod">Maksemeetod</label><br />
-                <select class="form-select form-select-lg" v-model="participant.PaymentMethod" id="paymentMethod" required>
+                <select class="form-select form-select-lg" v-model="eventParticipant.PaymentMethod" id="paymentMethod" required>
                     <option :value="1">Panga &uuml;lekanne</option>
                     <option :value="2">Sularaha</option>
                 </select>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="additionalInfo">Lisainfo ({{ charactersLeft }} / {{ additionalInfoMaxlength }})</label>
-                <textarea v-model="participant.AdditionalInfo"
+                <textarea v-model="eventParticipant.AdditionalInfo"
                           :maxlength="additionalInfoMaxlength"
                           class="form-control"
                           id="additionalInfo"
@@ -67,31 +67,37 @@
 <script setup lang="ts">
     import { Ref, ref, computed, defineEmits } from 'vue';
     import type { EventParticipantDTO } from '../model/EventParticipantDTO';
+    import type { ParticipantDTO } from '../model/ParticipantDTO';
     import { useRoute } from 'vue-router';
 
     const emit = defineEmits(['participantAdded']);
     const route = useRoute();
     const eventId = route.params.eventId;
-    const participant: Ref<EventParticipantDTO> = ref({
+    const eventParticipant: Ref<EventParticipantDTO> = ref({
         EventId: eventId.toString(),
+        ParticipantId: '',
+        ParticipantCount: 1,
+        PaymentMethod: 0,
+        AdditionalInfo: ''
+    });
+
+    const participant: Ref<ParticipantDTO> = ref({
         IdCode: '',
         FirstName: '',
         LastName: '',
         CompanyName: '',
-        ParticipantCount: 1,
-        PaymentMethod: 0,
-        AdditionalInfo: '',
         IsCompany: false
     });
 
     const submit = async () => {
+        eventParticipant.value.ParticipantId = await getParticipantId();
         try {
-            const response = await fetch('https://localhost:7165/participant', {
+            const response = await fetch('https://localhost:7165/eventParticipant', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(participant.value),
+                body: JSON.stringify(eventParticipant.value),
             });
 
             if (!response.ok) {
@@ -107,14 +113,35 @@
         
     };
 
+    const getParticipantId = async () => {
+        try {
+            const response = await fetch('https://localhost:7165/participant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(participant.value),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            return data.id;
+        } catch (error) {
+            console.error('Error creating event:', error);
+        }
+    }
+
     const isFilled = () => {
         if (!participant.value.IsCompany) {
-            if (participant.value.FirstName == '' || participant.value.LastName == '' || participant.value.IdCode.length != 11 || participant.value.PaymentMethod == 0) {
+            if (participant.value.FirstName == '' || participant.value.LastName == '' || participant.value.IdCode.length != 11 || eventParticipant.value.PaymentMethod == 0) {
                 return false;
             }
         }
         else {
-            if (participant.value.CompanyName == '' || participant.value.IdCode == '' || participant.value.PaymentMethod == 0) {
+            if (participant.value.CompanyName == '' || participant.value.IdCode == '' || eventParticipant.value.PaymentMethod == 0) {
                 return false;
             }
         }
@@ -126,12 +153,13 @@
         participant.value.FirstName = '';
         participant.value.LastName = '';
         participant.value.CompanyName = '';
-        participant.value.ParticipantCount = 1;
-        participant.value.AdditionalInfo = '';
+        eventParticipant.value.ParticipantCount = 1;
+        eventParticipant.value.AdditionalInfo = '';
+        eventParticipant.value.PaymentMethod = 0
     };
 
     const additionalInfoMaxlength = computed(() => (participant.value.IsCompany ? 5000 : 1500));
-    const charactersLeft = computed(() => additionalInfoMaxlength.value - participant.value.AdditionalInfo.length);
+    const charactersLeft = computed(() => additionalInfoMaxlength.value - eventParticipant.value.AdditionalInfo.length);
     const characterLimitExceeded = computed(() => charactersLeft.value < 0);
     const idCodeLabelText = computed(() => (participant.value.IsCompany ? 'Reg. nr' : 'Isikukood'));
     const idCodeLabel = computed(() => (participant.value.IsCompany ? 'regNr' : 'idCode'));

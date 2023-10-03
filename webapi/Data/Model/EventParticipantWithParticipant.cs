@@ -4,21 +4,17 @@ using webapi.Data.Model.Base;
 
 namespace webapi.Data.Model
 {
-    public class EventParticipant : BaseModel
+    public class EventParticipantWithParticipant : BaseModel
     {
-        [ForeignKey("Event")]
         public string EventId { get; set; }
-        public Event Event { get; set; }
-
-        [ForeignKey("Participant")]
         public string ParticipantId { get; set; }
-        public Participant Participant { get; set; }
-
+        public string IdCode { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? CompanyName { get; set; }
+        public bool IsCompany { get; set; }
         public int? ParticipantCount { get; set; }
-
         public string? AdditionalInfo { get; set; }
-
-        [Required]
         public PaymentMethod PaymentMethod { get; set; }
     }
 }

@@ -2,8 +2,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Home from '../src/views/Home.vue';
 import AddEvent from '../src/views/AddEvent.vue';
 import EventDetailsView from '../src/views/EventDetailsView.vue';
-import ChangeParticipantView from '../src/views/ChangeParticipantView.vue';
-import ChangeEventView from '../src/views/ChangeEventView.vue';
+import UpdateParticipantView from '../src/views/UpdateParticipantView.vue';
+import UpdateEventView from '../src/views/UpdateEventView.vue';
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -22,14 +22,14 @@ const routes: Array<RouteRecordRaw> = [
         component: EventDetailsView
     },
     {
-        path: '/changeParticipant/:participantId',
-        name: 'changeParticipant',
-        component: ChangeParticipantView
+        path: '/updateParticipant/:eventParticipantId',
+        name: 'updateParticipant',
+        component: UpdateParticipantView
     },
     {
-        path: '/changeEvent/:eventId',
-        name: 'changeEvent',
-        component: ChangeEventView
+        path: '/updateEvent/:eventId',
+        name: 'updateEvent',
+        component: UpdateEventView
     }
 ];
 

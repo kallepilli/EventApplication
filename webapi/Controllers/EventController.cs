@@ -19,7 +19,7 @@ public class EventController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<IActionResult> GetEvent(string id) => Ok(await service.GetEventWithParticipants(id));
+    public async Task<IActionResult> GetEvent(string id) => Ok(await service.GetEventWithParticipantCount(id));
 
     [HttpGet]
     [Route("")]

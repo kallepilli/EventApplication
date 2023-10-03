@@ -49,13 +49,15 @@
 <script setup lang="ts">
     import { useRoute, useRouter } from 'vue-router';
     import { Ref, ref, onMounted, computed } from 'vue';
-    import type { EventParticipantDTO } from '../model/EventParticipantDTO';
+    import type EventParticipantWithParticipant from '../model/EventParticipantWithParticipant';
+    import type ParticipantDTO from '../model/ParticipantDTO';
+    import type EventParticipantDTO from '../model/EventParticipantDTO';
 
-    const emit = defineEmits(['participantAdded']);
     const route = useRoute();
     const router = useRouter();
-    const participantId = route.params.participantId;
-    const participant: Ref<EventParticipantDTO> = ref({
+    const eventParticipantId = route.params.eventParticipantId;
+    const participant: Ref<EventParticipantWithParticipant> = ref({
+        Id: eventParticipantId,
         EventId: '',
         IdCode: '',
         FirstName: '',
@@ -68,9 +70,9 @@
     });
 
     const fetchParticipant = async () => {
-        const participantResponse = ref([]);
+        const participantResponse: Ref<EventParticipantWithParticipant> = ref([]);
         try {
-            const response = await fetch('https://localhost:7165/participant/' + participantId);
+            const response = await fetch('https://localhost:7165/eventParticipant/participant/' + eventParticipantId);
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -89,6 +91,7 @@
             participant.value.CompanyName = participantResponse.value.companyName;
             participant.value.ParticipantCount = participantResponse.value.participantCount;
         }
+        participant.value.ParticipantId = participantResponse.value.participantId;
         participant.value.EventId = participantResponse.value.eventId;
         participant.value.IdCode = participantResponse.value.idCode;
         participant.value.AdditionalInfo = participantResponse.value.additionalInfo;
@@ -101,13 +104,51 @@
     });
 
     const submit = async () => {
+
+        // Update participant
+        const updateParticipant: Ref<ParticipantDTO> = ref({
+            Id: participant.value.ParticipantId,
+            IdCode: participant.value.IdCode,
+            FirstName: participant.value.FirstName,
+            LastName: participant.value.LastName,
+            CompanyName: participant.value.CompanyName,
+            IsCompany: participant.value.IsCompany
+        });
+
         try {
-            const response = await fetch('https://localhost:7165/participant/' + participantId, {
+            const response = await fetch('https://localhost:7165/participant/' + participant.value.ParticipantId, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(participant.value),
+                body: JSON.stringify(updateParticipant.value),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+        } catch (error) {
+            console.error('Error creating event:', error);
+        }
+
+        // Update eventParticipant
+        const updateEventParticipant: Ref<EventParticipantDTO> = ref({
+            EventId: participant.value.EventId,
+            ParticipantId: participant.value.ParticipantId,
+            ParticipantCount: participant.value.ParticipantCount,
+            AdditionalInfo: participant.value.AdditionalInfo,
+            PaymentMethod: participant.value.PaymentMethod
+        });
+
+        try {
+            const response = await fetch('https://localhost:7165/eventParticipant/' + participant.value.Id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updateEventParticipant.value),
             });
 
             if (!response.ok) {

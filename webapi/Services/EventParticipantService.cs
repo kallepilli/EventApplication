@@ -8,10 +8,11 @@ namespace webapi.Services
     public class EventParticipantService : IEventParticipantService<EventParticipant, EventParticipantDTO>
     {
         private readonly IEventParticipantRepository<EventParticipant> repo;
-
-        public EventParticipantService(IEventParticipantRepository<EventParticipant> repository)
+        private readonly IParticipantRepository<Participant> participantRepo;
+        public EventParticipantService(IEventParticipantRepository<EventParticipant> repository, IParticipantRepository<Participant> participantRepository)
         {
             repo = repository;
+            participantRepo = participantRepository;
         }
 
         public async Task<EventParticipant> Get(string id) => await repo.Get(id);
@@ -24,20 +25,53 @@ namespace webapi.Services
             return new EventParticipant
             {
                 EventId = dto.EventId,
-                IdCode = dto.IdCode,
-                FirstName = dto.IsCompany == true ? null : dto.FirstName,
-                LastName = dto.IsCompany == true ? null : dto.LastName,
-                CompanyName = dto.IsCompany == true ? dto.CompanyName : null,
-                ParticipantCount = dto.IsCompany == true ? dto.ParticipantCount : 1,
+                ParticipantId = dto.ParticipantId,
+                ParticipantCount = dto.ParticipantCount,
                 AdditionalInfo = dto.AdditionalInfo,
-                PaymentMethod = dto.PaymentMethod,
-                IsCompany = dto.IsCompany
+                PaymentMethod = dto.PaymentMethod
             };
         }
 
-        public List<EventParticipant> GetParticipantListByEventId(string id)
+        public async Task<List<EventParticipantWithParticipant>> GetParticipantListByEventId(string id)
         {
-            return repo.GetParticipantListByEventId(id);
+            var eventParticipants = repo.GetEventParticipantListByEventId(id);
+            var returnList = new List<EventParticipantWithParticipant>();
+
+            foreach (var eventParticipant in eventParticipants)
+            {
+                returnList.Add(await GetEventParticipantWithParticipant(eventParticipant));
+            }
+            return returnList;
         }
+
+        public async Task<EventParticipantWithParticipant> GetEventParticipantWithParticipant(string eventParticipantId)
+        {
+            var eventParticipant = await repo.Get(eventParticipantId);
+            return await GetEventParticipantWithParticipant(eventParticipant);
+        }
+
+
+        private async Task<EventParticipantWithParticipant> GetEventParticipantWithParticipant(EventParticipant eventParticipant)
+        {
+            var participant = await participantRepo.Get(eventParticipant.ParticipantId);
+            var item = new EventParticipantWithParticipant
+            {
+                Id = eventParticipant.Id,
+                EventId = eventParticipant.EventId,
+                ParticipantId = eventParticipant.ParticipantId,
+                IdCode = participant.IdCode,
+                FirstName = participant.FirstName,
+                LastName = participant.LastName,
+                CompanyName = participant.CompanyName,
+                IsCompany = participant.IsCompany,
+                ParticipantCount = eventParticipant.ParticipantCount,
+                AdditionalInfo = eventParticipant.AdditionalInfo,
+                PaymentMethod = eventParticipant.PaymentMethod
+            };
+
+            return item;
+        }
+
+
     }
 }

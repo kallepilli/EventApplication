@@ -3,7 +3,7 @@
     public interface IEventParticipantRepository<T> : IBaseRepository<T>
     where T : class
     {
-        List<T> GetParticipantListByEventId(string id);
+        List<T> GetEventParticipantListByEventId(string id);
     }
 
 }

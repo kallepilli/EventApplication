@@ -1,6 +1,7 @@
 export interface EventParticipant {
-    id: string
+    id: String
     eventId: String
+    participantId: String
     idCode: String
     firstName: String
     lastName: String

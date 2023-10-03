@@ -21,7 +21,7 @@
                             <td>{{ event.location }}</td>
                             <td>{{ event.participantCount }}</td>
                             <td>
-                                <button @click="toChangeEvent(event.eventId)" class="btn btn-primary btn-sm">Muuda</button>
+                                <button @click="toUpdateEvent(event.eventId)" class="btn btn-primary btn-sm">Muuda</button>
                                 <button @click="toEventDetails(event.eventId)" class="btn btn-secondary btn-sm" style="margin-left:3px;">Osalejad</button>
                                 <button @click="deleteEvent(event.eventId)" class="btn btn-danger btn-sm" style="margin-left:3px;">Kustuta</button>
                             </td>
@@ -83,8 +83,8 @@
         router.push('/eventDetails/' + eventId);
     };
 
-    const toChangeEvent = (eventId: String) => {
-        router.push('/changeEvent/' + eventId);
+    const toUpdateEvent = (eventId: String) => {
+        router.push('/updateEvent/' + eventId);
     };
 
     const deleteEvent = async (eventId: String) => {
