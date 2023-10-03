@@ -5,7 +5,7 @@ using webapi.Services.Interfaces;
 
 namespace webapi.Services
 {
-    public class ParticipantService : IBaseService<Participant, ParticipantDTO>
+    public class ParticipantService : IParticipantService<Participant, ParticipantDTO>
     {
         private readonly IParticipantRepository<Participant> repo;
 
@@ -36,5 +36,8 @@ namespace webapi.Services
                 IsCompany = dto.IsCompany
             };
         }
+
+        public bool IsIdCodeAvailable(string idCode) => repo.IsIdCodeAvailable(idCode);
+        
     }
 }

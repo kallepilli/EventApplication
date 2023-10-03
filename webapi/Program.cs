@@ -23,7 +23,7 @@ builder.Services.AddTransient<IEventParticipantRepository<EventParticipant>, Eve
 builder.Services.AddTransient<IEventParticipantService<EventParticipant, EventParticipantDTO>, EventParticipantService>();
 
 builder.Services.AddTransient<IParticipantRepository<Participant>, ParticipantRepository>();
-builder.Services.AddTransient<IBaseService<Participant, ParticipantDTO>, ParticipantService>();
+builder.Services.AddTransient<IParticipantService<Participant, ParticipantDTO>, ParticipantService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using webapi.Aids;
 using webapi.Data;
 using webapi.Data.Model;
 using webapi.Data.Model.DTOs;
@@ -11,9 +13,9 @@ namespace webapi.Controllers;
 public class ParticipantController : ControllerBase
 {
 
-    private readonly IBaseService<Participant, ParticipantDTO> service;
+    private readonly IParticipantService<Participant, ParticipantDTO> service;
 
-    public ParticipantController(IBaseService<Participant, ParticipantDTO> service)
+    public ParticipantController(IParticipantService<Participant, ParticipantDTO> service)
     {
         this.service = service;
     }
@@ -55,5 +57,17 @@ public class ParticipantController : ControllerBase
         if (result)
             return Ok();
         return NotFound();
+    }
+
+    [HttpGet]
+    [Route("validateId/{idCode}")]
+    public IActionResult ValidateIdCode(string idCode)
+    {
+        var helper = new HelperMethods();
+        var result = helper.ValidateIdCode(idCode);
+
+        if (result)
+            return Ok(service.IsIdCodeAvailable(idCode));
+        return Ok(false);
     }
 }

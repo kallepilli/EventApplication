@@ -84,5 +84,12 @@ namespace webapi.Repositories
             }
             return false;
         }
+
+        public bool IsIdCodeAvailable(string idCode)
+        {
+            if (dbSet.FirstOrDefault(x => x.IdCode == idCode && x.IsCompany == false) == null)
+                return true;
+            return false;
+        }
     }
 }

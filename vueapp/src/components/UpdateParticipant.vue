@@ -16,7 +16,8 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" :for="idCodeLabel">{{ idCodeLabelText }}</label>
-                <input v-model="participant.IdCode" type="text" class="form-control" id="idCode" required />
+                <input v-model="participant.IdCode" @input="validateIdCode" type="text" class="form-control" id="idCode" required />
+                <div v-if="!participant.IsCompany && !isIdCodeValid" class="text-danger">Isikukood ei vasta standardile v&otilde;i selle isikukoodiga osaleja on juba andmebaasis!</div>
             </div>
             <div class="mb-3" v-if="participant.IsCompany">
                 <label class="form-label" for="participantCount">Osalejate arv</label>
@@ -68,6 +69,33 @@
         AdditionalInfo: '',
         IsCompany: false
     });
+
+    const isIdCodeValid = ref(true);
+
+    const validateIdCode = async () => {
+
+        if (participant.value.IsCompany) {
+            isIdCodeValid.value = true;
+        }
+        else {
+            try {
+                const response = await fetch('https://localhost:7165/participant/validateId/' + participant.value.IdCode, {
+                    method: 'GET'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                isIdCodeValid.value = data;
+
+            } catch (error) {
+                console.error('Error creating event:', error);
+            }
+        }
+    };
+
 
     const fetchParticipant = async () => {
         const participantResponse: Ref<EventParticipantWithParticipant> = ref([]);
