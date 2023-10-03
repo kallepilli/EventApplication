@@ -20,7 +20,7 @@ namespace webapi.Services
         public async Task<Event> Get(string id) => await repo.Get(id);
         public async Task<List<Event>> GetList() => await repo.GetList();
         public async Task<Event> Save(EventDTO data) => await repo.Save(DtoToEntity(data));
-        public Task<Event> Update(string id, EventDTO data) => throw new NotImplementedException();
+        public async Task<Event> Update(string id, EventDTO data) => await repo.Update(id, DtoToEntity(data));
         public async Task<bool> Delete(string id) => await repo.Delete(id);
         
         public Event DtoToEntity(EventDTO dto)
@@ -45,6 +45,7 @@ namespace webapi.Services
                 Name = eventEntity.Name,
                 EventTime = eventEntity.EventTime,
                 Location = eventEntity.Location,
+                AdditionalInfo = eventEntity.AdditionalInfo ?? string.Empty,
                 ParticipantCount = count
             };
         }
@@ -57,7 +58,7 @@ namespace webapi.Services
             returnArray[1] = new List<EventWithParticipants>();
             foreach (var item in events) 
             {
-                if (item.EventTime > DateTime.Today) // index 0 - future events, index 1 - past event
+                if (item.EventTime >= DateTime.Today.ToUniversalTime()) // index 0 - future events, index 1 - past event
                     returnArray[0].Add(await GetEventWithParticipants(item.Id));
                 else
                     returnArray[1].Add(await GetEventWithParticipants(item.Id));

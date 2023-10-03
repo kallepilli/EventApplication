@@ -1,25 +1,6 @@
 <template>
     <div class="col-md-6">
-        <h3 class="mb-4">Lisa uus osaleja</h3>
-        <label class="form-label">Osaleja t&uuml;&uuml;p</label><br />
-        <div class="form-check form-check-inline">
-            <input class="form-check-input"
-                   type="radio"
-                   v-model="participant.IsCompany"
-                   :value="false"
-                   id="false"
-                   name="isCompany" />
-            <label class="form-check-label" for="false">Eraisik</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input"
-                   type="radio"
-                   v-model="participant.IsCompany"
-                   :value="true"
-                   id="true"
-                   name="isCompany" />
-            <label class="form-check-label" for="true">Ettev&otilde;te</label>
-        </div>
+        <h3 class="mb-4">Muuda osaleja andmeid</h3>
         <form @submit.prevent="createParticipant">
             <div class="mb-3" v-if="!participant.IsCompany">
                 <label class="form-label" for="firstName">Eesnimi</label>
@@ -59,21 +40,23 @@
                     Lisainfo &uuml;letab lubatud arvu {{ charactersLeft * -1 }} v&otilde;rra!
                 </div>
             </div>
-            <button type="submit" @click="submit()" :disabled="characterLimitExceeded || !isFilled()" class="btn btn-primary">Lisa uus osaleja</button>
+            <button type="submit" @click="submit()" :disabled="characterLimitExceeded || !isFilled()" class="btn btn-primary">Muuda osalejat</button>
         </form>
     </div>
 </template>
 
+
 <script setup lang="ts">
-    import { Ref, ref, computed, defineEmits } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
+    import { Ref, ref, onMounted, computed } from 'vue';
     import type { EventParticipantDTO } from '../model/EventParticipantDTO';
-    import { useRoute } from 'vue-router';
 
     const emit = defineEmits(['participantAdded']);
     const route = useRoute();
-    const eventId = route.params.eventId;
+    const router = useRouter();
+    const participantId = route.params.participantId;
     const participant: Ref<EventParticipantDTO> = ref({
-        EventId: eventId.toString(),
+        EventId: '',
         IdCode: '',
         FirstName: '',
         LastName: '',
@@ -84,10 +67,43 @@
         IsCompany: false
     });
 
+    const fetchParticipant = async () => {
+        const participantResponse = ref([]);
+        try {
+            const response = await fetch('https://localhost:7165/participant/' + participantId);
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            participantResponse.value = data;
+        } catch (error) {
+            console.error('Error fetching participant', error);
+        }
+        if (!participantResponse.value.isCompany) {
+            participant.value.FirstName = participantResponse.value.firstName;
+            participant.value.LastName = participantResponse.value.lastName;
+        }
+        else {
+            participant.value.CompanyName = participantResponse.value.companyName;
+            participant.value.ParticipantCount = participantResponse.value.participantCount;
+        }
+        participant.value.EventId = participantResponse.value.eventId;
+        participant.value.IdCode = participantResponse.value.idCode;
+        participant.value.AdditionalInfo = participantResponse.value.additionalInfo;
+        participant.value.PaymentMethod = participantResponse.value.paymentMethod;
+        participant.value.IsCompany = participantResponse.value.isCompany;
+    };
+
+    onMounted(() => {
+        fetchParticipant();
+    });
+
     const submit = async () => {
         try {
-            const response = await fetch('https://localhost:7165/participant', {
-                method: 'POST',
+            const response = await fetch('https://localhost:7165/participant/' + participantId, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -99,13 +115,17 @@
             }
 
             const data = await response.json();
-            emit('participantAdded', true);
-            clearForm();
         } catch (error) {
             console.error('Error creating event:', error);
         }
-        
+        router.push('/eventDetails/' + participant.value.EventId);
     };
+
+    const additionalInfoMaxlength = computed(() => (participant.value.IsCompany ? 5000 : 1500));
+    const charactersLeft = computed(() => additionalInfoMaxlength.value - participant.value.AdditionalInfo.length);
+    const characterLimitExceeded = computed(() => charactersLeft.value < 0);
+    const idCodeLabelText = computed(() => (participant.value.IsCompany ? 'Reg. nr' : 'Isikukood'));
+    const idCodeLabel = computed(() => (participant.value.IsCompany ? 'regNr' : 'idCode'));
 
     const isFilled = () => {
         if (!participant.value.IsCompany) {
@@ -120,19 +140,4 @@
         }
         return true;
     };
-
-    const clearForm = () => {
-        participant.value.IdCode = '';
-        participant.value.FirstName = '';
-        participant.value.LastName = '';
-        participant.value.CompanyName = '';
-        participant.value.ParticipantCount = 1;
-        participant.value.AdditionalInfo = '';
-    };
-
-    const additionalInfoMaxlength = computed(() => (participant.value.IsCompany ? 5000 : 1500));
-    const charactersLeft = computed(() => additionalInfoMaxlength.value - participant.value.AdditionalInfo.length);
-    const characterLimitExceeded = computed(() => charactersLeft.value < 0);
-    const idCodeLabelText = computed(() => (participant.value.IsCompany ? 'Reg. nr' : 'Isikukood'));
-    const idCodeLabel = computed(() => (participant.value.IsCompany ? 'regNr' : 'idCode'));
 </script>

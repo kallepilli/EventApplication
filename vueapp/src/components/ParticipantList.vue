@@ -23,10 +23,11 @@
 
 <script setup lang="ts">
     import { Ref, ref, onMounted, defineProps, watch } from 'vue';
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
     import type { EventParticipant } from '../model/EventParticipant';
 
     const route = useRoute();
+    const router = useRouter();
     const props = defineProps({
         participantsUpdated: Boolean,
     });
@@ -63,9 +64,6 @@
     const changeParticipant = (id: String) => {
         router.push('/changeParticipant/' + id);
     };
-
-
-
 
 
     const deleteParticipant = async (id: String) => {

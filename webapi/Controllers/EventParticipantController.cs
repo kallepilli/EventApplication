@@ -19,7 +19,7 @@ public class EventParticipantController : ControllerBase
     }
 
     [HttpGet]
-    [Route("id")]
+    [Route("{id}")]
     public async Task<IActionResult> GetParticipant(string id) 
     {
         var result = await service.Get(id);
@@ -42,7 +42,7 @@ public class EventParticipantController : ControllerBase
     }
 
     [HttpPut]
-    [Route("id")]
+    [Route("{id}")]
     public async Task<IActionResult> UpdateEventParticipant([FromBody] EventParticipantDTO dto, string id)
     {
         var result = await service.Update(id, dto);

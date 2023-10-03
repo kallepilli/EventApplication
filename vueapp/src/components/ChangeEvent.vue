@@ -1,6 +1,6 @@
 <template>
     <div style="max-width:500px;">
-        <h3>Lisa uus &uuml;ritus</h3>
+        <h3>Muuda &uuml;ritust</h3>
         <form @submit.prevent="createEvent">
             <div class="mb-3">
                 <label for="eventName" class="form-label">&Uuml;rituse nimetus</label>
@@ -25,17 +25,18 @@
                     Lisainfo &uuml;letab lubatud arvu {{ charactersLeft * -1 }} v&otilde;rra!
                 </div>
             </div>
-            <button :disabled="!isFilled() || characterLimitExceeded" type="submit" @click="submit()" class="btn btn-primary">Loo uus &uuml;ritus</button>
+            <button :disabled="!isFilled() || characterLimitExceeded" type="submit" @click="submit()" class="btn btn-primary">Muuda &uuml;ritust</button>
         </form>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { Ref, ref, computed } from 'vue';
+    import { Ref, ref, computed, onMounted } from 'vue';
     import type { EventDTO } from '../model/EventDTO';
-    import { useRouter } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
 
     const router = useRouter();
+    const route = useRoute();
     const event: Ref<EventDTO> = ref({
         Name: '',
         EventTime: undefined,
@@ -44,11 +45,32 @@
     });
 
     const todayDate = new Date().toISOString().split('T')[0];
+    const eventId = route.params.eventId;
+
+    const fetchEvent = async () => {
+        const eventResponse = ref([]);
+        try {
+            const response = await fetch('https://localhost:7165/event/' + eventId);
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            eventResponse.value = data;
+        } catch (error) {
+            console.error('Error fetching participant', error);
+        }
+        event.value.Name = eventResponse.value.name;
+        event.value.AdditionalInfo = eventResponse.value.additionalInfo;
+        event.value.EventTime = formatDate(eventResponse.value.eventTime);
+        event.value.Location = eventResponse.value.location;
+    };
 
     const submit = async () => {
         try {
-            const response = await fetch('https://localhost:7165/event', {
-                method: 'POST',
+            const response = await fetch('https://localhost:7165/event/' + eventId, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -81,7 +103,18 @@
         return true;
     };
 
-    
+    onMounted(() => {
+        fetchEvent();
+    });
+
+    const formatDate = (inputDate: string) => {
+    const date = new Date(inputDate);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
     const additionalInfoMaxlength = computed(() => 1000);
     const charactersLeft = computed(() => additionalInfoMaxlength.value - event.value.AdditionalInfo.length);
     const characterLimitExceeded = computed(() => charactersLeft.value < 0);

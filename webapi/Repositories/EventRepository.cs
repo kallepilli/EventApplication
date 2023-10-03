@@ -36,9 +36,28 @@ namespace webapi.Repositories
             return await Get(data.Id);
         }
 
-        public Task<Event> Update(string id, Event data)
+        public async Task<Event> Update(string id, Event data)
         {
-            throw new NotImplementedException();
+            var dbEvent = await Get(id);
+            if (dbEvent is not null)
+            {
+                dbEvent.Name = data.Name;
+                dbEvent.Location = data.Location;
+                dbEvent.AdditionalInfo = data.AdditionalInfo;
+                dbEvent.EventTime = data.EventTime;
+
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+
+                return data;
+            }
+            return null;
         }
         public async Task<bool> Delete(string id)
         {

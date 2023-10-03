@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <h3>Tuleviku &uuml;ritused</h3>
                 <table class="table table-striped table-hover">
                     <thead>
@@ -20,12 +20,16 @@
                             <td>{{ formatDate(event.eventTime) }}</td>
                             <td>{{ event.location }}</td>
                             <td>{{ event.participantCount }}</td>
-                            <td><button @click="toEventDetails(event.eventId)" class="btn btn-secondary btn-sm">Osalejad</button><button @click="deleteEvent(event.eventId)" class="btn btn-danger btn-sm" style="margin-left:3px;">Kustuta &uuml;ritus</button></td>
+                            <td>
+                                <button @click="toChangeEvent(event.eventId)" class="btn btn-primary btn-sm">Muuda</button>
+                                <button @click="toEventDetails(event.eventId)" class="btn btn-secondary btn-sm" style="margin-left:3px;">Osalejad</button>
+                                <button @click="deleteEvent(event.eventId)" class="btn btn-danger btn-sm" style="margin-left:3px;">Kustuta</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <h3>Toimunud &uuml;ritused</h3>
                 <table class="table table-striped table-hover">
                     <thead>
@@ -43,8 +47,7 @@
                             <td>{{ formatDate(event.eventTime) }}</td>
                             <td>{{ event.location }}</td>
                             <td>{{ event.participantCount }}</td>
-                            <td><button @click="toEventDetails(event.eventId)" class="btn btn-secondary btn-sm">Osalejad</button>
-                            <button @click="deleteEvent(event.eventId)" class="btn btn-danger btn-sm" style="margin-left:3px;">Kustuta &uuml;ritus</button></td>
+                            <td><button @click="toEventDetails(event.eventId)" class="btn btn-secondary btn-sm" style="margin-left:3px;">Osalejad</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -54,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, computed } from 'vue';
     import { useRouter } from 'vue-router';
 
     const router = useRouter();
@@ -78,6 +81,10 @@
 
     const toEventDetails = (eventId: String) => {
         router.push('/eventDetails/' + eventId);
+    };
+
+    const toChangeEvent = (eventId: String) => {
+        router.push('/changeEvent/' + eventId);
     };
 
     const deleteEvent = async (eventId: String) => {

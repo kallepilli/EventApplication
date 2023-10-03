@@ -19,7 +19,7 @@ public class EventController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<IActionResult> GetEvents(string id) => Ok(await service.GetEventWithParticipants(id));
+    public async Task<IActionResult> GetEvent(string id) => Ok(await service.GetEventWithParticipants(id));
 
     [HttpGet]
     [Route("")]
@@ -29,6 +29,16 @@ public class EventController : ControllerBase
     public async Task<IActionResult> SaveEvent([FromBody] EventDTO dto)
     {
         var result = await service.Save(dto);
+        if (result is null)
+            return BadRequest();
+        return Ok(result);
+    }
+
+    [HttpPut]
+    [Route("{id}")]
+    public async Task<IActionResult> UpdateEventParticipant([FromBody] EventDTO dto, string id)
+    {
+        var result = await service.Update(id, dto);
         if (result is null)
             return BadRequest();
         return Ok(result);

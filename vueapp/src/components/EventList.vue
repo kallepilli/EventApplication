@@ -15,6 +15,10 @@
                         <th>Koht:</th>
                         <td>{{ event.location }}</td>
                     </tr>
+                    <tr>
+                        <th>Lisainfo:</th>
+                        <td>{{ event.additionalInfo }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
