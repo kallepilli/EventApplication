@@ -1,5 +1,5 @@
 <template>
-    <div class="col-md-6">
+    <div v-if="!props.isPastEvent" class="col-md-6">
         <h3 class="mb-4">Lisa uus osaleja</h3>
         <label class="form-label">Osaleja t&uuml;&uuml;p</label><br />
         <div class="form-check form-check-inline">
@@ -59,19 +59,23 @@
                     Lisainfo &uuml;letab lubatud arvu {{ charactersLeft * -1 }} v&otilde;rra!
                 </div>
             </div>
+            <button type="button" @click="toHomepage()" class="btn btn-secondary" style="margin-right:3px;">Tagasi</button>
             <button type="submit" @click="submit()" :disabled="characterLimitExceeded || !isFilled()" class="btn btn-primary">Lisa uus osaleja</button>
         </form>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { Ref, ref, computed, defineEmits } from 'vue';
+    import { Ref, ref, computed, defineEmits, defineProps } from 'vue';
     import type { EventParticipantDTO } from '../model/EventParticipantDTO';
     import type { ParticipantDTO } from '../model/ParticipantDTO';
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
+
+    const props = defineProps({ isPastEvent: Boolean });
 
     const emit = defineEmits(['participantAdded']);
     const route = useRoute();
+    const router = useRouter();
     const eventId = route.params.eventId;
     const eventParticipant: Ref<EventParticipantDTO> = ref({
         EventId: eventId.toString(),
@@ -110,7 +114,7 @@
         } catch (error) {
             console.error('Error creating event:', error);
         }
-        
+
     };
 
     const getParticipantId = async () => {
@@ -156,6 +160,10 @@
         eventParticipant.value.ParticipantCount = 1;
         eventParticipant.value.AdditionalInfo = '';
         eventParticipant.value.PaymentMethod = 0
+    };
+
+    const toHomepage = () => {
+        router.push('/');
     };
 
     const additionalInfoMaxlength = computed(() => (participant.value.IsCompany ? 5000 : 1500));

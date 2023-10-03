@@ -25,6 +25,7 @@
                     Lisainfo &uuml;letab lubatud arvu {{ charactersLeft * -1 }} v&otilde;rra!
                 </div>
             </div>
+            <button type="button" @click="toHomepage()" class="btn btn-secondary" style="margin-right:3px;">Tagasi</button>
             <button :disabled="!isFilled() || characterLimitExceeded" type="submit" @click="submit()" class="btn btn-primary">Muuda &uuml;ritust</button>
         </form>
     </div>
@@ -108,12 +109,16 @@
     });
 
     const formatDate = (inputDate: string) => {
-    const date = new Date(inputDate);
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
-};
+        const date = new Date(inputDate);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const toHomepage = () => {
+        router.push('/');
+    };
 
     const additionalInfoMaxlength = computed(() => 1000);
     const charactersLeft = computed(() => additionalInfoMaxlength.value - event.value.AdditionalInfo.length);

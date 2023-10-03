@@ -11,11 +11,11 @@
                             <th>Asukoht</th>
                             <th>Osalejate arv</th>
                             <th></th>
-                  
+
                         </tr>
                     </thead>
                     <tbody>
-                        <tr  v-for="event in events[0]" :key="event.eventId">
+                        <tr v-for="event in events[0]" :key="event.eventId">
                             <td>{{ event.name }}</td>
                             <td>{{ formatDate(event.eventTime) }}</td>
                             <td>{{ event.location }}</td>
@@ -90,7 +90,7 @@
     const deleteEvent = async (eventId: String) => {
         try {
             const response = await fetch('https://localhost:7165/event/' + eventId, {
-                method: 'DELETE' 
+                method: 'DELETE'
             });
 
             if (!response.ok) {

@@ -1,28 +1,27 @@
 <template>
-        <div class="col-md-12">
-            <h2>&Uuml;rituse info</h2>
-            <table class="table table-hover">
-                <tbody>
-                    <tr>
-                        <th>&Uuml;rituse nimi:</th>
-                        <td>{{ event.name }}</td>
-                    </tr>
-                    <tr>
-                        <th>Toimumisaeg:</th>
-                        <td>{{ formatDate(event.eventTime) }}</td>
-                    </tr>
-                    <tr>
-                        <th>Koht:</th>
-                        <td>{{ event.location }}</td>
-                    </tr>
-                    <tr>
-                        <th>Lisainfo:</th>
-                        <td>{{ event.additionalInfo }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
+    <div class="col-md-12">
+        <h2>&Uuml;rituse info</h2>
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <th>&Uuml;rituse nimi:</th>
+                    <td>{{ event.name }}</td>
+                </tr>
+                <tr>
+                    <th>Toimumisaeg:</th>
+                    <td>{{ formatDate(event.eventTime) }}</td>
+                </tr>
+                <tr>
+                    <th>Koht:</th>
+                    <td>{{ event.location }}</td>
+                </tr>
+                <tr>
+                    <th>Lisainfo:</th>
+                    <td>{{ event.additionalInfo }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -34,7 +33,6 @@
 
     const fetchEvent = async () => {
         const eventId = route.params.eventId;
-        console.log(eventId);
         try {
             const response = await fetch('https://localhost:7165/event/' + eventId);
 

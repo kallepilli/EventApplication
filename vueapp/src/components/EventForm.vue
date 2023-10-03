@@ -25,6 +25,7 @@
                     Lisainfo &uuml;letab lubatud arvu {{ charactersLeft * -1 }} v&otilde;rra!
                 </div>
             </div>
+            <button type="button" @click="toHomepage()" class="btn btn-secondary" style="margin-right:3px;">Tagasi</button>
             <button :disabled="!isFilled() || characterLimitExceeded" type="submit" @click="submit()" class="btn btn-primary">Loo uus &uuml;ritus</button>
         </form>
     </div>
@@ -61,7 +62,6 @@
 
             const data = await response.json();
             event.value = data;
-
             event.value.Name = '';
             event.value.EventTime = new Date();
             event.value.Location = '';
@@ -81,7 +81,10 @@
         return true;
     };
 
-    
+    const toHomepage = () => {
+        router.push('/');
+    };
+
     const additionalInfoMaxlength = computed(() => 1000);
     const charactersLeft = computed(() => additionalInfoMaxlength.value - event.value.AdditionalInfo.length);
     const characterLimitExceeded = computed(() => charactersLeft.value < 0);
