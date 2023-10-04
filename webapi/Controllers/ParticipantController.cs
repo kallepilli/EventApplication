@@ -66,8 +66,12 @@ public class ParticipantController : ControllerBase
         var helper = new HelperMethods();
         var result = helper.ValidateIdCode(idCode);
 
-        if (result)
-            return Ok(service.IsIdCodeAvailable(idCode));
-        return Ok(false);
+        if (!result)
+            return Ok(new ApiResponse<object> { Success = false, Message = "Isikukood ei vasta standardile!" });
+
+        if (service.IsIdCodeAvailable(idCode))
+            return Ok(new ApiResponse<object> { Success = true, Message = string.Empty });
+        else
+            return Ok(new ApiResponse<object> { Success = false, Message = "Sellise isikukoodiga isik on juba andmebaasis!" }); 
     }
 }

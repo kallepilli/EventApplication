@@ -98,7 +98,7 @@ namespace webapi.Data
                 IsCompany = false,
                 FirstName = "Investor",
                 LastName = "Toomas",
-                IdCode = "36308014226"
+                IdCode = "36308010071"
             },
             new Participant
             {
@@ -134,7 +134,7 @@ namespace webapi.Data
             {
                 EventId = "test1",
                 ParticipantId = "testParticipant3",
-                ParticipantCount = 12,
+                ParticipantCount = 17,
                 AdditionalInfo = "Ühel inimesel on koer kaasas",
                 PaymentMethod = PaymentMethod.BankTransfer
             },
@@ -164,7 +164,7 @@ namespace webapi.Data
             {
                 EventId = "test2",
                 ParticipantId = "testParticipant3",
-                ParticipantCount = 12,
+                ParticipantCount = 8,
                 AdditionalInfo = "",
                 PaymentMethod = PaymentMethod.BankTransfer
             },
@@ -172,7 +172,7 @@ namespace webapi.Data
             {
                 EventId = "test2",
                 ParticipantId = "testParticipant4",
-                ParticipantCount = 2,
+                ParticipantCount = 9,
                 AdditionalInfo = "",
                 PaymentMethod = PaymentMethod.Cash
             },
@@ -194,7 +194,7 @@ namespace webapi.Data
             {
                 EventId = "test3",
                 ParticipantId = "testParticipant3",
-                ParticipantCount = 12,
+                ParticipantCount = 20,
                 AdditionalInfo = "",
                 PaymentMethod = PaymentMethod.BankTransfer
             },
@@ -224,7 +224,7 @@ namespace webapi.Data
             {
                 EventId = "test4",
                 ParticipantId = "testParticipant3",
-                ParticipantCount = 12,
+                ParticipantCount = 5,
                 AdditionalInfo = "",
                 PaymentMethod = PaymentMethod.BankTransfer
             },

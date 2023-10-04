@@ -41,7 +41,7 @@ namespace webapi.Services
             {
                 returnList.Add(await GetEventParticipantWithParticipant(eventParticipant));
             }
-            return returnList;
+            return returnList.OrderBy(p => p.FirstName ?? p.CompanyName).ToList();
         }
 
         public async Task<EventParticipantWithParticipant> GetEventParticipantWithParticipant(string eventParticipantId)
@@ -71,7 +71,5 @@ namespace webapi.Services
 
             return item;
         }
-
-
     }
 }

@@ -36,7 +36,7 @@
             <div class="mb-3">
                 <label class="form-label" :for="idCodeLabel">{{ idCodeLabelText }}</label>
                 <input v-model="participant.IdCode" @input="validateIdCode" type="text" class="form-control" id="idCode" required />
-                <div v-if="!participant.IsCompany && !isIdCodeValid" class="text-danger">Isikukood ei vasta standardile v&otilde;i selle isikukoodiga osaleja on juba andmebaasis!</div>
+                <div v-if="!participant.IsCompany && !isIdCodeValid" class="text-danger">{{ message }}</div>
             </div>
             <div class="mb-3" v-if="participant.IsCompany">
                 <label class="form-label" for="participantCount">Osalejate arv</label>
@@ -95,6 +95,7 @@
     });
 
     const isIdCodeValid = ref(true);
+    const message = ref("");
 
     const validateIdCode = async () => {
 
@@ -112,7 +113,8 @@
                 }
 
                 const data = await response.json();
-                isIdCodeValid.value = data;
+                isIdCodeValid.value = data.success;
+                message.value = data.message;
 
             } catch (error) {
                 console.error('Error creating event:', error);
