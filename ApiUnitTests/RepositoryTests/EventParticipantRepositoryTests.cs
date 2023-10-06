@@ -56,7 +56,6 @@ namespace ApiUnitTests.RepositoryTests
             };
         }
 
-        protected override Func<EventParticipant, string> GetIdFunc() => e => e.Id;
 
         [TestMethod]
         public void GetEventParticipantListByEventId_ReturnsListOfParticipants()

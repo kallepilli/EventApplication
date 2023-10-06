@@ -16,6 +16,7 @@ namespace ApiUnitTests.RepositoryTests
                 IsCompany = false,
                 FirstName = "Kalle",
                 LastName = "Pilli",
+                CompanyName = string.Empty,
                 IdCode = "39208014225"
             };
         }
@@ -28,6 +29,7 @@ namespace ApiUnitTests.RepositoryTests
                 IsCompany = false,
                 FirstName = "Kalle Updated",
                 LastName = "Pilli UpdTaed",
+                CompanyName = string.Empty,
                 IdCode = "39208014225"
             };
         }
@@ -47,6 +49,7 @@ namespace ApiUnitTests.RepositoryTests
                     IsCompany = false,
                     FirstName = "Kalle",
                     LastName = "Pilli",
+                    CompanyName= string.Empty,
                     IdCode = "39208014225"
                 },
                 new Participant
@@ -55,12 +58,12 @@ namespace ApiUnitTests.RepositoryTests
                     IsCompany = false,
                     FirstName = "Investor",
                     LastName = "Toomas",
+                    CompanyName= string.Empty,
                     IdCode = "36308010071"
                 }
             };
         }
 
-        protected override Func<Participant, string> GetIdFunc() => e => e.Id;
 
         [TestMethod]
         public void IsIdCodeAvailable_ReturnsTrue()

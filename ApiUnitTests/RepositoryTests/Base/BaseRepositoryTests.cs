@@ -1,12 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using webapi.Data.Model.Base;
 using webapi.Repositories.Interfaces;
 
 namespace ApiUnitTests.RepositoryTests
 {
     [TestClass]
     public abstract class BaseRepositoryTests<T>
-    where T : class
+    where T : BaseModel
     {
         protected IBaseRepository<T> repo;
         protected Mock<IBaseRepository<T>> mockRepo;
@@ -15,7 +16,6 @@ namespace ApiUnitTests.RepositoryTests
         protected abstract T GetUpdatedItem();
         protected abstract string GetNonExistingId();
         protected abstract List<T> GetTestItems();
-        protected abstract Func<T, string> GetIdFunc();
 
         [TestInitialize]
         public virtual void Initialize()
@@ -28,12 +28,12 @@ namespace ApiUnitTests.RepositoryTests
         public async Task Get_ReturnsItem()
         {
             var testItem = GetTestItem();
-            mockRepo.Setup(r => r.Get(It.IsAny<string>())).ReturnsAsync(testItem);
+            mockRepo.Setup(r => r.Get(testItem.Id)).ReturnsAsync(testItem);
 
-            var result = await repo.Get(GetIdFunc()(testItem));
+            var result = await repo.Get(testItem.Id);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(GetIdFunc()(testItem), GetIdFunc()(result));
+            Assert.AreEqual(testItem.Id, result.Id);
             Assert.IsInstanceOfType(result, typeof(T));
         }
 
@@ -70,7 +70,7 @@ namespace ApiUnitTests.RepositoryTests
             var result = await repo.Save(testItem);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(GetIdFunc()(testItem), GetIdFunc()(result));
+            Assert.AreEqual(testItem.Id, result.Id);
             Assert.IsInstanceOfType(result, typeof(T));
         }
 
@@ -79,12 +79,12 @@ namespace ApiUnitTests.RepositoryTests
         {
             var testItem = GetTestItem();
             var updatedItem = GetUpdatedItem();
-            mockRepo.Setup(r => r.Update(It.IsAny<string>(), updatedItem)).ReturnsAsync(updatedItem);
+            mockRepo.Setup(r => r.Update(testItem.Id, updatedItem)).ReturnsAsync(updatedItem);
 
-            var result = await repo.Update(GetIdFunc()(testItem), updatedItem);
+            var result = await repo.Update(testItem.Id, updatedItem);
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(GetIdFunc()(updatedItem), GetIdFunc()(result));
+            Assert.AreEqual(updatedItem.Id, result.Id);
             Assert.IsInstanceOfType(result, typeof(T));
         }
 
@@ -104,9 +104,9 @@ namespace ApiUnitTests.RepositoryTests
         public async Task Delete_ReturnsTrue()
         {
             var testItem = GetTestItem();
-            mockRepo.Setup(r => r.Delete(It.IsAny<string>())).ReturnsAsync(true);
+            mockRepo.Setup(r => r.Delete(testItem.Id)).ReturnsAsync(true);
 
-            var result = await repo.Delete(GetIdFunc()(testItem));
+            var result = await repo.Delete(testItem.Id);
 
             Assert.IsTrue(result);
         }

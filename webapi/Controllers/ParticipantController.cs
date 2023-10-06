@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using webapi.Aids;
-using webapi.Data;
 using webapi.Data.Model;
 using webapi.Data.Model.DTOs;
 using webapi.Services.Interfaces;
@@ -61,8 +59,16 @@ public class ParticipantController : ControllerBase
 
     [HttpGet]
     [Route("validateId/{idCode}")]
-    public IActionResult ValidateIdCode(string idCode)
+    public IActionResult ValidateIdCode(string idCode, [FromQuery] bool isCompany)
     {
+       if (isCompany == true)
+        {
+            if (service.IsIdCodeAvailable(idCode))
+                return Ok(new ApiResponse<object> { Success = true, Message = string.Empty });
+            else
+                return Ok(new ApiResponse<object> { Success = false, Message = "Sellise reg. numbriga osaleja on juba andmebaasis!" });
+        }
+        
         var helper = new HelperMethods();
         var result = helper.ValidateIdCode(idCode);
 

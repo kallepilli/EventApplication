@@ -62,7 +62,5 @@ namespace ApiUnitTests.RepositoryTests
                 }
             };
         }
-
-        protected override Func<Event, string> GetIdFunc() => e => e.Id;
     }
 }

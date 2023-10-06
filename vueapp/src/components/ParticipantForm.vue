@@ -36,7 +36,7 @@
             <div class="mb-3">
                 <label class="form-label" :for="idCodeLabel">{{ idCodeLabelText }}</label>
                 <input v-model="participant.IdCode" @input="validateIdCode" type="text" class="form-control" id="idCode" required />
-                <div v-if="!participant.IsCompany && !isIdCodeValid" class="text-danger">{{ message }}</div>
+                <div v-if="!isIdCodeValid" class="text-danger">{{ message }}</div>
             </div>
             <div class="mb-3" v-if="participant.IsCompany">
                 <label class="form-label" for="participantCount">Osalejate arv</label>
@@ -61,7 +61,7 @@
                 </div>
             </div>
             <button type="button" @click="toHomepage()" class="btn btn-secondary" style="margin-right:3px;">Tagasi</button>
-            <button type="submit" @click="submit()" :disabled="characterLimitExceeded || !isFilled()" class="btn btn-primary">Lisa uus osaleja</button>
+            <button type="submit" @click="submit()" :disabled="characterLimitExceeded || !isFilled() || !isIdCodeValid" class="btn btn-primary">Lisa uus osaleja</button>
         </form>
     </div>
 </template>
@@ -98,13 +98,12 @@
     const message = ref("");
 
     const validateIdCode = async () => {
+        let isCompany: String = '?isCompany=false';
+        if (participant.value.IsCompany == true)
+            isCompany = '?isCompany=true';
 
-        if (participant.value.IsCompany) {
-            isIdCodeValid.value = true;
-        }
-        else {
-            try {
-                const response = await fetch('https://localhost:7165/participant/validateId/' + participant.value.IdCode, {
+        try {
+            const response = await fetch('https://localhost:7165/participant/validateId/' + participant.value.IdCode + isCompany, {
                     method: 'GET'
                 });
 
@@ -119,7 +118,6 @@
             } catch (error) {
                 console.error('Error creating event:', error);
             }
-        }
     };
 
     const submit = async () => {
