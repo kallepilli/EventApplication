@@ -2,9 +2,9 @@
 
 namespace webapi.Services.Interfaces
 {
-    public interface IParticipantService<T, R> : IBaseService<T, R>
-    where T : class
-    where R : class
+    public interface IParticipantService<TEntity, TDto> : IBaseService<TEntity, TDto>
+    where TEntity : class
+    where TDto : class
 
     {
         bool IsIdCodeAvailable(string idCode);

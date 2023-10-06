@@ -2,9 +2,9 @@
 
 namespace webapi.Services.Interfaces
 {
-    public interface IEventService<T, R> : IBaseService<T, R>
-    where T : class
-    where R : class
+    public interface IEventService<TEntity, TDto> : IBaseService<TEntity, TDto>
+    where TEntity : class
+    where TDto : class
 
     {
         Task<EventWithParticipantCount> GetEventWithParticipantCount(string eventId);

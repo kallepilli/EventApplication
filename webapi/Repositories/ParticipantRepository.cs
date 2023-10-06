@@ -1,24 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using webapi.Data;
 using webapi.Data.Model;
-using webapi.Data.Model.DTOs;
 using webapi.Repositories.Interfaces;
 
 namespace webapi.Repositories
 {
-    public class ParticipantRepository : IParticipantRepository<Participant>
+    public class ParticipantRepository : BaseRepository<Participant>, IParticipantRepository<Participant>
     {
 
         private readonly ApplicationDbContext db;
         private readonly DbSet<Participant> dbSet;
 
-        public ParticipantRepository(ApplicationDbContext context)
+        public ParticipantRepository(ApplicationDbContext context) : base(context)
         {
             db = context;
             dbSet = context.Participants;
         }
-
-        public async Task<Participant> Get(string id) => (await dbSet.FirstOrDefaultAsync(e => e.Id == id))!;
 
         public async Task<Participant> GetByNameAndIdCode(Participant data)
         {
@@ -32,24 +29,8 @@ namespace webapi.Repositories
             }
         }
 
-        public async Task<List<Participant>> GetList() => (await dbSet.ToListAsync());
 
-        public async Task<Participant?> Save(Participant data)
-        {
-            try
-            {
-                dbSet.Add(data);
-                await db.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                return null;
-                throw;
-            }
-            return await Get(data.Id);
-        }
-
-        public async Task<Participant?> Update(string id, Participant data)
+        public override async Task<Participant?> Update(string id, Participant data)
         {
             var dbParticipant = await Get(id);
             if (dbParticipant is not null)
@@ -72,17 +53,6 @@ namespace webapi.Repositories
                 return data;
             }
             return null;
-        }
-        public async Task<bool> Delete(string id)
-        {
-            var dbParticipant = await Get(id);
-            if (dbParticipant is not null)
-            {
-                dbSet.Remove(dbParticipant);
-                await db.SaveChangesAsync();
-                return true;
-            }
-            return false;
         }
 
         public bool IsIdCodeAvailable(string idCode)

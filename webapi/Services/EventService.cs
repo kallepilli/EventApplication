@@ -1,13 +1,11 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using webapi.Data.Model;
+﻿using webapi.Data.Model;
 using webapi.Data.Model.DTOs;
-using webapi.Repositories;
 using webapi.Repositories.Interfaces;
 using webapi.Services.Interfaces;
 
 namespace webapi.Services
 {
-    public class EventService : IEventService<Event, EventDTO>
+    public class EventService : BaseService<Event, EventDTO>, IEventService<Event, EventDTO>
     {
         private readonly IBaseRepository<Event> repo;
         private readonly IEventParticipantRepository<EventParticipant> eventParticipantRepo;
@@ -15,20 +13,14 @@ namespace webapi.Services
 
         public EventService(IBaseRepository<Event> repository, 
             IEventParticipantRepository<EventParticipant> eventParticipantRepository, 
-            IParticipantRepository<Participant> participantRepository)
+            IParticipantRepository<Participant> participantRepository) : base(repository)
         {
             repo = repository;      
             eventParticipantRepo = eventParticipantRepository;
             participantRepo = participantRepository;
         }
 
-        public async Task<Event> Get(string id) => await repo.Get(id);
-        public async Task<List<Event>> GetList() => await repo.GetList();
-        public async Task<Event> Save(EventDTO data) => await repo.Save(DtoToEntity(data));
-        public async Task<Event> Update(string id, EventDTO data) => await repo.Update(id, DtoToEntity(data));
-        public async Task<bool> Delete(string id) => await repo.Delete(id);
-        
-        public Event DtoToEntity(EventDTO dto)
+        public override Event DtoToEntity(EventDTO dto)
         {
             return new Event
             {

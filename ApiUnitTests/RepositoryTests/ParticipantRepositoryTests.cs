@@ -82,7 +82,6 @@ namespace ApiUnitTests.RepositoryTests
         public void IsIdCodeAvailable_ReturnsFalse()
         {
             var idCode = "testIdCode";
-            var participants = GetTestItems();
 
             var mockParticipantRepository = new Mock<IParticipantRepository<Participant>>();
             var participantRepository = mockParticipantRepository.Object;
@@ -92,6 +91,37 @@ namespace ApiUnitTests.RepositoryTests
             var result = participantRepository.IsIdCodeAvailable(idCode);
 
             Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public async Task GetByNameAndIdCode_ReturnsParticipant()
+        {
+            var participant = GetTestItem();
+
+            var mockParticipantRepository = new Mock<IParticipantRepository<Participant>>();
+            var participantRepository = mockParticipantRepository.Object;
+
+            mockParticipantRepository.Setup(r => r.GetByNameAndIdCode(participant)).ReturnsAsync(participant);
+
+            var result = await participantRepository.GetByNameAndIdCode(participant);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result, participant);
+        }
+
+        [TestMethod]
+        public async Task GetByNameAndIdCode_ReturnsNull()
+        {
+            var participant = GetTestItem();
+
+            var mockParticipantRepository = new Mock<IParticipantRepository<Participant>>();
+            var participantRepository = mockParticipantRepository.Object;
+
+            mockParticipantRepository.Setup(r => r.GetByNameAndIdCode(participant)).ReturnsAsync((Participant?)null);
+
+            var result = await participantRepository.GetByNameAndIdCode(participant);
+
+            Assert.IsNull(result);
         }
     }
 }

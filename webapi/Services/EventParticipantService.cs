@@ -5,22 +5,18 @@ using webapi.Services.Interfaces;
 
 namespace webapi.Services
 {
-    public class EventParticipantService : IEventParticipantService<EventParticipant, EventParticipantDTO>
+    public class EventParticipantService : BaseService<EventParticipant, EventParticipantDTO>, IEventParticipantService<EventParticipant, EventParticipantDTO>
     {
         private readonly IEventParticipantRepository<EventParticipant> repo;
         private readonly IParticipantRepository<Participant> participantRepo;
-        public EventParticipantService(IEventParticipantRepository<EventParticipant> repository, IParticipantRepository<Participant> participantRepository)
+        public EventParticipantService(IEventParticipantRepository<EventParticipant> repository, 
+            IParticipantRepository<Participant> participantRepository) : base(repository)
         {
             repo = repository;
             participantRepo = participantRepository;
         }
 
-        public async Task<EventParticipant> Get(string id) => await repo.Get(id);
-        public async Task<List<EventParticipant>> GetList() => await repo.GetList();
-        public async Task<EventParticipant> Save(EventParticipantDTO data) => await repo.Save(DtoToEntity(data));
-        public async Task<EventParticipant> Update(string id, EventParticipantDTO data) => await repo.Update(id, DtoToEntity(data));
-        public async Task<bool> Delete(string id) => await repo.Delete(id);
-        public EventParticipant DtoToEntity(EventParticipantDTO dto)
+        public override EventParticipant DtoToEntity(EventParticipantDTO dto)
         {
             return new EventParticipant
             {

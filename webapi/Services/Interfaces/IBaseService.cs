@@ -1,15 +1,15 @@
 ﻿namespace webapi.Services.Interfaces
 {
-    public interface IBaseService<T, R>
-    where T : class
-    where R : class
+    public interface IBaseService<TEntity, TDto>
+    where TEntity : class
+    where TDto : class
 
     {
-        Task<T> Get(string id);
-        Task<List<T>> GetList();
-        Task<T> Save(R data);
-        Task<T> Update(string id, R data);
+        Task<TEntity> Get(string id);
+        Task<List<TEntity>> GetList();
+        Task<TEntity> Save(TDto data);
+        Task<TEntity> Update(string id, TDto data);
         Task<bool> Delete(string id);
-        T DtoToEntity(R data);
+        TEntity DtoToEntity(TDto data);
     }
 }
