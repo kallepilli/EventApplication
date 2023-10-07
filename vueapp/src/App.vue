@@ -1,47 +1,30 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <div class="container">
+                <router-link to="/" class="navbar-brand">
+                    <img src="../src/assets/logo.png" alt="Event App" class="logo-img" style="">
+                </router-link>
+                <div class="container">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <router-link to="/" class="nav-link">Avaleht</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link to="/addEvent" class="nav-link">Lisa &uuml;ritus</router-link>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+    <div class="container fixed-top" style="margin-top: 80px;">
+        <div class="scrollable-content">
+            <router-view />
+        </div>
+    </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
+<script setup lang="ts">
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+</script>
