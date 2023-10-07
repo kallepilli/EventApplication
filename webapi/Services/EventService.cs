@@ -33,7 +33,7 @@ namespace webapi.Services
 
         public async Task<EventWithParticipantCount> GetEventWithParticipantCount(string eventId)
         {
-            var count = GetParticipantCount(eventId);
+            var count = await GetParticipantCount(eventId);
             var eventEntity = await repo.Get(eventId);
 
             return new EventWithParticipantCount
@@ -64,15 +64,15 @@ namespace webapi.Services
             return returnArray;
         }
 
-        private int GetParticipantCount(string id)
+        public async Task<int> GetParticipantCount(string id)
         {
             var eventParticipants = eventParticipantRepo.GetEventParticipantListByEventId(id);
             int count = 0;
 
             foreach (var item in eventParticipants)
             {
-                var participant = participantRepo.Get(item.ParticipantId);
-                if (participant.Result.IsCompany)
+                var participant = await participantRepo.Get(item.ParticipantId);
+                if (participant.IsCompany)
                     count += item.ParticipantCount ?? 0;
                 else
                     count++;
