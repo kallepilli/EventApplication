@@ -35,7 +35,7 @@ namespace webapi.Services
             };
         }
 
-        public bool IsIdCodeAvailable(string idCode) => repo.IsIdCodeAvailable(idCode);
+        public bool IsIdCodeAvailable(string idCode, string currentIdCode) => repo.IsIdCodeAvailable(idCode, currentIdCode);
         
     }
 }

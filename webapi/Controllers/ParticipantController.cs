@@ -59,11 +59,11 @@ public class ParticipantController : ControllerBase
 
     [HttpGet]
     [Route("validateId/{idCode}")]
-    public IActionResult ValidateIdCode(string idCode, [FromQuery] bool isCompany)
+    public IActionResult ValidateIdCode(string idCode, [FromQuery] bool isCompany, [FromQuery] string currentIdCode = "")
     {
        if (isCompany == true)
         {
-            if (service.IsIdCodeAvailable(idCode))
+            if (service.IsIdCodeAvailable(idCode, currentIdCode))
                 return Ok(new ApiResponse<object> { Success = true, Message = string.Empty });
             else
                 return Ok(new ApiResponse<object> { Success = false, Message = "Sellise reg. numbriga osaleja on juba andmebaasis!" });
@@ -75,7 +75,7 @@ public class ParticipantController : ControllerBase
         if (!result)
             return Ok(new ApiResponse<object> { Success = false, Message = "Isikukood ei vasta standardile!" });
 
-        if (service.IsIdCodeAvailable(idCode))
+        if (service.IsIdCodeAvailable(idCode, currentIdCode))
             return Ok(new ApiResponse<object> { Success = true, Message = string.Empty });
         else
             return Ok(new ApiResponse<object> { Success = false, Message = "Sellise isikukoodiga isik on juba andmebaasis!" }); 

@@ -70,6 +70,8 @@
         IsCompany: false
     });
 
+    const currentIdCode = ref("");
+
     const isIdCodeValid = ref(true);
     const message = ref("");
 
@@ -79,7 +81,7 @@
             isCompany = '?isCompany=true';
 
         try {
-            const response = await fetch('https://localhost:7165/participant/validateId/' + participant.value.IdCode + isCompany + '&currentId=' + participant.value.IdCode, {
+            const response = await fetch('https://localhost:7165/participant/validateId/' + participant.value.IdCode + isCompany + '&currentIdCode=' + currentIdCode.value, {
                 method: 'GET'
             });
 
@@ -125,6 +127,7 @@
         participant.value.AdditionalInfo = participantResponse.value.additionalInfo;
         participant.value.PaymentMethod = participantResponse.value.paymentMethod;
         participant.value.IsCompany = participantResponse.value.isCompany;
+        currentIdCode.value = participantResponse.value.idCode;
     };
 
     onMounted(() => {

@@ -74,9 +74,9 @@ namespace ApiUnitTests.RepositoryTests
             var mockParticipantRepository = new Mock<IParticipantRepository<Participant>>();
             var participantRepository = mockParticipantRepository.Object;
 
-            mockParticipantRepository.Setup(r => r.IsIdCodeAvailable(idCode)).Returns(true);
+            mockParticipantRepository.Setup(r => r.IsIdCodeAvailable(idCode, "")).Returns(true);
 
-            var result = participantRepository.IsIdCodeAvailable(idCode);
+            var result = participantRepository.IsIdCodeAvailable(idCode, "");
 
             Assert.IsTrue(result);
         }
@@ -89,9 +89,9 @@ namespace ApiUnitTests.RepositoryTests
             var mockParticipantRepository = new Mock<IParticipantRepository<Participant>>();
             var participantRepository = mockParticipantRepository.Object;
 
-            mockParticipantRepository.Setup(r => r.IsIdCodeAvailable(idCode)).Returns(false);
+            mockParticipantRepository.Setup(r => r.IsIdCodeAvailable(idCode, "")).Returns(false);
 
-            var result = participantRepository.IsIdCodeAvailable(idCode);
+            var result = participantRepository.IsIdCodeAvailable(idCode, "");
 
             Assert.IsFalse(result);
         }

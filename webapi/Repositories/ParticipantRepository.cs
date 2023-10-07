@@ -55,9 +55,9 @@ namespace webapi.Repositories
             return null;
         }
 
-        public bool IsIdCodeAvailable(string idCode)
+        public bool IsIdCodeAvailable(string idCode, string currentIdCode)
         {
-            if (dbSet.FirstOrDefault(x => x.IdCode == idCode && x.IsCompany == false) == null)
+            if (dbSet.FirstOrDefault(x => x.IdCode == idCode && x.IdCode != currentIdCode) == null)
                 return true;
             return false;
         }

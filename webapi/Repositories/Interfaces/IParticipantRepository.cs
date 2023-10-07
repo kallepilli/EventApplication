@@ -6,7 +6,7 @@ namespace webapi.Repositories.Interfaces
     where T : class
     {
         Task<T> GetByNameAndIdCode(T data);
-        bool IsIdCodeAvailable(string idCode);
+        bool IsIdCodeAvailable(string idCode, string currentIdCode);
     }
 
 }

@@ -7,6 +7,6 @@ namespace webapi.Services.Interfaces
     where TDto : class
 
     {
-        bool IsIdCodeAvailable(string idCode);
+        bool IsIdCodeAvailable(string idCode, string currentIdCode);
     }
 }
