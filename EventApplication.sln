@@ -7,7 +7,13 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vueapp", "vueapp\vueapp.esp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi", "webapi\webapi.csproj", "{A5C9CA6A-EB10-4300-89EB-26D58D0F2E40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiUnitTests", "ApiUnitTests\ApiUnitTests.csproj", "{D52A8624-1AEB-4E39-9482-B0C9E54A56F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiUnitTests", "ApiUnitTests\ApiUnitTests.csproj", "{D52A8624-1AEB-4E39-9482-B0C9E54A56F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{34DC3A22-CF73-4532-8624-73EFD6649ED5}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Desktop\Database diagram.png = ..\..\..\Desktop\Database diagram.png
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
