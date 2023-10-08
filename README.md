@@ -1,10 +1,12 @@
 RAKENDUSE JOOKSUTAMINE:
-1. vueapp directorys sisestada terminali käsklus "npm install"
+1. vueapp directorys sisestada terminali käsklus "npm install"	
 2. webapi directorys jooksutada dockeri faili käsklusega "docker-compose up", et seada üles lokaalne PostgreSQL andmebaas
 	2.1 pgAdmin andmebaasihaldur asub http://localhost:5050/browser/
 	2.1 Lisada server ning hostiks määrata "postgres" (port 5432). Username: "postgres", password: "password"
-3. Visual studios jooksutada rakendus (Multiple startup projects määrata webapi ning vueapp). 
-	3.1 Oodata hetk, et käivituks ka webapi koos swaggeriga. Toimub ka testandmete sisestamine. Värskendada vueapp-i, kuni ürituse loetelusse lisanduvad üritused.
+3. Rakenduse jooksutamine:
+	3.1 Käivita front-end vueapp directorys käsklusega "npm run dev" (Brauseris võib olla vajalik kinnitamine, et liigutakse n-ö kahtlasele lehele)
+	3.2 Käivita back-end: Visual studios määra startup projektiks webapi ning vajuta F5 või "Start"
+	3.3 Oodata hetk, et käivituks ka webapi koos swaggeriga. Toimub ka testandmete sisestamine. Värskendada vueapp-i, kuni ürituse loetelusse lisanduvad üritused.
 4. Rakendus on valmis töötamiseks.
 
 Back-end (webapi)
